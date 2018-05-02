@@ -1,0 +1,26 @@
+﻿﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.AI;
+using System.Reflection;
+using System;
+
+public class StateMachine : MonoBehaviour {
+	public IStateMachine currentState;
+	
+	void Start () 
+	{
+		currentState = (IStateMachine)Activator.CreateInstance(typeof(StateName),new object[]{this});
+		StartCoroutine ("brainTick");
+	}
+
+	// Запустить машину состояний и обновлять ее каждую миллисекунду.
+	IEnumerator brainTick()
+	{
+		while (true)
+		{
+			currentState.UpdateState (); 
+			yield return new WaitForSeconds (0.1f);
+		}
+	}
+}
